@@ -17,6 +17,10 @@ struct RecipeListView: View {
                 Text("Recipe 2")
             }
             .navigationTitle("All Recipes")
+            .toolbar {
+                Text("Edit")
+                Image(systemName: "plus")
+            }
         }
     }
 }
