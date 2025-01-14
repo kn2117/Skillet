@@ -7,14 +7,20 @@
 
 import Foundation
 
-struct Recipe {
+class Recipe {
     var name: String
-    var ingredients: ingredient
+    var ingredients: [ingredient]
     var directions: String
     
     struct ingredient {
         var amount: Double
         var unit: String
         var ingredientName: String
+    }
+    
+    init(name: String, ingredients: [ingredient], directions: String) {
+        self.name = name
+        self.ingredients = ingredients
+        self.directions = directions
     }
 }
