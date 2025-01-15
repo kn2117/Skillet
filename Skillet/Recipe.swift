@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import SwiftData
 
+@Model
 class Recipe {
     var name: String
     var ingredients: [ingredient]
     var directions: String
     
-    struct ingredient {
+    struct ingredient: Codable {
         var amount: Double
         var unit: String
         var ingredientName: String
