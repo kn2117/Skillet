@@ -25,4 +25,10 @@ class Recipe {
         self.ingredients = ingredients
         self.directions = directions
     }
+    
+    init() {
+        self.name = ""
+        self.ingredients = [ingredient(amount: 0.0, unit: "", ingredientName: "")]
+        self.directions = ""
+    }
 }
