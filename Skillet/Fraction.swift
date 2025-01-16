@@ -6,8 +6,14 @@
 //
 
 import Foundation
+import SwiftData
 
+@Model
 class Fraction: Codable {
+    enum CodingKeys: CodingKey {
+        case wholeNumber, numerator, denominator
+    }
+    
     var wholeNumber: Int
     var numerator: Int
     var denominator: Int {
@@ -64,5 +70,19 @@ class Fraction: Codable {
         self.wholeNumber = 0
         self.numerator = 0
         self.denominator = 1
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        wholeNumber = try container.decode(Int.self, forKey: .wholeNumber)
+        numerator = try container.decode(Int.self, forKey: .numerator)
+        denominator = try container.decode(Int.self, forKey: .denominator)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(wholeNumber, forKey: .wholeNumber)
+        try container.encode(numerator, forKey: .numerator)
+        try container.encode(denominator, forKey: .denominator)
     }
 }

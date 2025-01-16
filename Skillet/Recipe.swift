@@ -9,107 +9,58 @@ import Foundation
 import SwiftData
 
 @Model
-class Recipe: Identifiable {
+class Recipe: Codable, Identifiable {
+    enum CodingKeys: CodingKey {
+        case id, name, ingredients, directions, notes
+    }
+
     var id = UUID()
     var name: String
-    var ingredients: [ingredient]
+    var ingredients: [IngredientEntry]
     var directions: String
+    var notes: String
 
-    struct ingredient: Codable {
-        var amount: Fraction
-        var unit: String
-        var ingredientName: String
-
-        init(amount: Fraction, unit: String, ingredientName: String) {
-            self.amount = amount
-            self.unit = unit
-            self.ingredientName = ingredientName
-        }
-
-        init() {
-            self.amount = Fraction()
-            self.unit = ""
-            self.ingredientName = ""
-        }
-    }
-
-    struct Fraction: Codable {
-        var wholeNumber: Int
-        var numerator: Int
-        var denominator: Int {
-            didSet {
-                if self.denominator == 0 {
-                    self.denominator = 1
-                }
-            }
-        }
-
-        func gcd(a: Int, b: Int) -> Int {
-            let larger = max(a, b)
-            let smaller = min(a, b)
-
-            if larger == smaller {
-                return smaller
-            }
-            return gcd(a: larger - smaller, b: smaller)
-        }
-
-        func addFraction(addend: Fraction) -> Fraction {
-            var sum = Fraction()
-            var greatestCommonDivisor: Int
-            sum.denominator = self.denominator * addend.denominator
-            sum.numerator =
-                self.numerator * addend.denominator + self.denominator
-                * addend.numerator
-            sum.wholeNumber =
-                self.wholeNumber + addend.wholeNumber + sum.numerator
-                / sum.denominator
-            sum.numerator = sum.numerator % sum.denominator
-            greatestCommonDivisor = gcd(a: sum.numerator, b: sum.denominator)
-            sum.numerator /= greatestCommonDivisor
-            sum.denominator /= greatestCommonDivisor
-            return sum
-        }
-
-        func multiplyFraction(multiplier: Int) -> Fraction {
-            var product = Fraction()
-            var greatestCommonDivisor: Int
-            product.numerator =
-                self.wholeNumber * self.denominator + self.numerator
-            product.numerator *= multiplier
-            product.wholeNumber = product.numerator / product.denominator
-            product.numerator = product.numerator % product.denominator
-            greatestCommonDivisor = gcd(
-                a: product.numerator, b: product.denominator)
-            product.numerator /= greatestCommonDivisor
-            product.denominator /= greatestCommonDivisor
-            return product
-        }
-
-        init(wholeNumber: Int, numerator: Int, denominator: Int) {
-            self.wholeNumber = wholeNumber
-            self.numerator = numerator
-            self.denominator = denominator
-        }
-
-        init() {
-            self.wholeNumber = 0
-            self.numerator = 0
-            self.denominator = 1
-        }
-    }
-
-    init(name: String, ingredients: [ingredient], directions: String) {
+    init(name: String, ingredients: [IngredientEntry], directions: String, notes: String) {
         self.name = name
         self.ingredients = ingredients
         self.directions = directions
+        self.notes = notes
     }
 
     init(name: String) {
         self.name = name
         self.ingredients = [
-            ingredient()
+            IngredientEntry()
         ]
         self.directions = ""
+        self.notes = ""
+    }
+
+    init() {
+        self.name = ""
+        self.ingredients = [
+            IngredientEntry()
+        ]
+        self.directions = ""
+        self.notes = ""
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        ingredients = try container.decode(
+            [IngredientEntry].self, forKey: .ingredients)
+        directions = try container.decode(String.self, forKey: .directions)
+        notes = try container.decode(String.self, forKey: .notes)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(ingredients, forKey: .ingredients)
+        try container.encode(directions, forKey: .directions)
+        try container.encode(notes, forKey: .notes)
     }
 }

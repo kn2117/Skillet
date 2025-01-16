@@ -11,6 +11,7 @@ struct AddRecipeView: View {
     @State private var recipeNameInput = ""
     @State private var ingredientInput = ""
     @State private var directionInput = ""
+    var recipeToAdd: Recipe
     var body: some View {
         NavigationStack {
             List {
@@ -36,5 +37,5 @@ struct AddRecipeView: View {
 }
 
 #Preview {
-    AddRecipeView()
+    AddRecipeView(recipeToAdd: Recipe(name: "Test"))
 }

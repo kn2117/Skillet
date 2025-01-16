@@ -11,6 +11,8 @@ import SwiftUI
 struct RecipeListView: View {
     @Query var listOfRecipes: [Recipe]
     @Environment(\.modelContext) var modelContext
+    @State private var showingAddRecipe = false
+    @State private var recipe = Recipe()
     
     var body: some View {
         NavigationStack {
@@ -26,10 +28,13 @@ struct RecipeListView: View {
                     Text("Edit")
                 }
                 Button {
-                    print("Test")
+                    showingAddRecipe = true
                 } label: {
                     Image(systemName: "plus")
                 }
+            }
+            .sheet(isPresented: $showingAddRecipe) {
+                AddRecipeView(recipeToAdd: recipe)
             }
         }
     }
