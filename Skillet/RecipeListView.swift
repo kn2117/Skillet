@@ -5,10 +5,12 @@
 //  Created by Kevin Nakadate on 1/13/25.
 //
 
+import SwiftData
 import SwiftUI
 
 struct RecipeListView: View {
-    var listOfRecipes: [Recipe] = []
+    @Query var listOfRecipes: [Recipe]
+    @Environment(\.modelContext) var modelContext
     
     var body: some View {
         NavigationStack {

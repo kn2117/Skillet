@@ -9,13 +9,14 @@ import Foundation
 import SwiftData
 
 @Model
-class Recipe {
+class Recipe: Fraction, Identifiable {
+    var id = UUID()
     var name: String
     var ingredients: [ingredient]
     var directions: String
     
     struct ingredient: Codable {
-        var amount: Double
+        var amount: Fraction
         var unit: String
         var ingredientName: String
     }
@@ -26,9 +27,9 @@ class Recipe {
         self.directions = directions
     }
     
-    init() {
-        self.name = ""
-        self.ingredients = [ingredient(amount: 0.0, unit: "", ingredientName: "")]
+    init(name: String) {
+        self.name = name
+        self.ingredients = [ingredient(amount: Fraction(), unit: "", ingredientName: "")]
         self.directions = ""
     }
 }
