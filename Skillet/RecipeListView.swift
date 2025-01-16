@@ -20,8 +20,16 @@ struct RecipeListView: View {
             }
             .navigationTitle("All Recipes")
             .toolbar {
-                Text("Edit")
-                Image(systemName: "plus")
+                Button {
+                    print("Test")
+                } label: {
+                    Text("Edit")
+                }
+                Button {
+                    print("Test")
+                } label: {
+                    Image(systemName: "plus")
+                }
             }
         }
     }

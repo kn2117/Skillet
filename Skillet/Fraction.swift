@@ -18,21 +18,39 @@ class Fraction: Codable {
         }
     }
     
+    func gcd(a: Int, b: Int) -> Int {
+        let larger = max(a, b)
+        let smaller = min(a, b)
+        
+        if (larger == smaller) {
+            return smaller
+        }
+        return gcd(a: larger - smaller, b: smaller)
+    }
+    
     func addFraction(addend: Fraction) -> Fraction {
-        var sum = Fraction()
+        let sum = Fraction()
+        var greatestCommonDivisor: Int
         sum.denominator = self.denominator * addend.denominator
         sum.numerator = self.numerator * addend.denominator + self.denominator * addend.numerator
         sum.wholeNumber = self.wholeNumber + addend.wholeNumber + sum.numerator / sum.denominator
-        sum.numerator = sum.numerator & sum.denominator
+        sum.numerator = sum.numerator % sum.denominator
+        greatestCommonDivisor = gcd(a: sum.numerator, b: sum.denominator)
+        sum.numerator /= greatestCommonDivisor
+        sum.denominator /= greatestCommonDivisor
         return sum
     }
     
     func multiplyFraction(multiplier: Int) -> Fraction {
-        var product = Fraction()
+        let product = Fraction()
+        var greatestCommonDivisor: Int
         product.numerator = self.wholeNumber * self.denominator + self.numerator
         product.numerator *= multiplier
         product.wholeNumber = product.numerator / product.denominator
         product.numerator = product.numerator % product.denominator
+        greatestCommonDivisor = gcd(a: product.numerator, b: product.denominator)
+        product.numerator /= greatestCommonDivisor
+        product.denominator /= greatestCommonDivisor
         return product
     }
     
